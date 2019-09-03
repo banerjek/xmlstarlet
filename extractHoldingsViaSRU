@@ -1,0 +1,10 @@
+
+############################################################
+# pull record from Alma via SRU and strip all namespace info
+############################################################
+RECORD=$(curl -s 'https://na01.alma.exlibrisgroup.com/view/sru/01ALLIANCE_NETWORK?version=1.2&operation=searchRetrieve&query=alma.mms_id=99162909090001451' | sed 's/ xmlns="[^"]*"//g')
+
+###############################################################
+# pull out all 852s with subfield a, 6, and first 2 subfield 9s
+###############################################################
+echo $RECORD | xmlstarlet sel -t -m '/searchRetrieveResponse/records/record/recordData/record/datafield[@tag="852"]' -v 'subfield[@code="a"]' -o "," -v 'subfield[@code="6"]' -o "," -v 'subfield[@code="9"][1]' -o "-" -v 'subfield[@code="9"][2]' -n
