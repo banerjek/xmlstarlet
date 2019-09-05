@@ -10,17 +10,14 @@ RECORD=$(curl -s "https://na01.alma.exlibrisgroup.com/view/sru/01ALLIANCE_NETWOR
 ###############################################################
 echo $RECORD | xmlstarlet sel -T -t -m '/searchRetrieveResponse/records/record/recordData/record' \
 	-n -o "$RECNO 245	" -c 'datafield[@tag="245"]/subfield[@code="a"]'  \
-	-t -m '/searchRetrieveResponse/records/record/recordData/record' \
-	-m 'datafield[@tag="843"]' \
+	-t -m '/searchRetrieveResponse/records/record/recordData/record/datafield[@tag="843"]/subfield[@code="a"]' \
 	-n -o "$RECNO 843	" \
-	-v 'subfield[@code="a"]' \
-	-t -m '/searchRetrieveResponse/records/record/recordData/record' \
-	-m 'datafield[@tag="852"]' \
+	-v '.' \
+	-t -m '/searchRetrieveResponse/records/record/recordData/record/datafield[@tag="852"]' \
 	-n -o "$RECNO 852	" \
 	-v 'subfield[@code="a"]' -o "_" \
 	-v 'subfield[@code="6"]' -o "_" \
 	-v 'subfield[@code="9"][1]' -o "-" -v 'subfield[@code="9"][2]' \
-	-t -m '/searchRetrieveResponse/records/record/recordData/record' \
-	-m 'datafield[@tag="856"]' \
+	-t -m '/searchRetrieveResponse/records/record/recordData/record/datafield[@tag="856"]/subfield[@code="u"]' \
 	-n -o "$RECNO 856	" \
-	-v 'subfield[@code="u"]'  
+	-v '.'  
