@@ -8,8 +8,10 @@ RECORD=$(curl -s "https://na01.alma.exlibrisgroup.com/view/sru/01ALLIANCE_NETWOR
 ###############################################################
 # pull out 245s, 843, 852, and 856
 ###############################################################
-echo $RECORD | xmlstarlet sel -T -t -m '/searchRetrieveResponse/records/record/recordData/record' \
-	-n -o "$RECNO 245	" -c 'datafield[@tag="245"]/subfield[@code="a"]'  \
+echo $RECORD | xmlstarlet sel -T \
+	-t -m '/searchRetrieveResponse/records/record/recordData/record/datafield[@tag="245"]/subfield[@code="a"]' \
+	-n -o "$RECNO 245	" \
+	-v '.' \
 	-t -m '/searchRetrieveResponse/records/record/recordData/record/datafield[@tag="843"]/subfield[@code="a"]' \
 	-n -o "$RECNO 843	" \
 	-v '.' \
