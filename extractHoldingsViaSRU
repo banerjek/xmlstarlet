@@ -2,16 +2,14 @@
 ############################################################
 # pull record from Alma via SRU and strip all namespace info
 ############################################################
-RECNO=$1
-RECNO="99325960530001451"
-#RECNO="99162909090001451"
-RECORD=$(curl -s "https://na01.alma.exlibrisgroup.com/view/sru/01ALLIANCE_NETWORK?version=1.2&operation=searchRetrieve&query=alma.mms_id=$RECNO" | sed 's/ xmlns="[^"]*"//g')
+RECNO=$(sed 's/[^0-9]//g' <<< "$1")
 
+RECORD=$(curl -s "https://na01.alma.exlibrisgroup.com/view/sru/01ALLIANCE_NETWORK?version=1.2&operation=searchRetrieve&query=alma.mms_id=$RECNO" | sed 's/ xmlns="[^"]*"//g')
 ###############################################################
 # pull out 245s, 843, 852, and 856
 ###############################################################
 echo $RECORD | xmlstarlet sel -T -t -m '/searchRetrieveResponse/records/record/recordData/record' \
-	-o "$RECNO 245	" -c 'datafield[@tag="245"]/subfield[@code="a"]'  \
+	-n -o "$RECNO 245	" -c 'datafield[@tag="245"]/subfield[@code="a"]'  \
 	-t -m '/searchRetrieveResponse/records/record/recordData/record' \
 	-m 'datafield[@tag="843"]' \
 	-n -o "$RECNO 843	" \
@@ -26,4 +24,3 @@ echo $RECORD | xmlstarlet sel -T -t -m '/searchRetrieveResponse/records/record/r
 	-m 'datafield[@tag="856"]' \
 	-n -o "$RECNO 856	" \
 	-v 'subfield[@code="u"]'  
-
