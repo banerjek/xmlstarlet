@@ -1,0 +1,23 @@
+# Clean out nonnumeric data from IZ MMSID
+IZMMSID=$(sed 's/[^0-9]//g' <<< "$1")
+
+INSTITUTION_CODE="OHSU"
+NZ_CODE="NETWORK"
+SERVER_PREFIX="https://na01.alma.exlibrisgroup.com/view/sru/01ALLIANCE_"
+QUERY="?version=1.2&operation=searchRetrieve&query=alma.mms_id="
+
+# Retrieve IZ record and strip namespace
+IZRECORD=$(curl -s "$SERVER_PREFIX$INSTITUTION_CODE$QUERY$IZMMSID" | sed 's/ xmlns="[^"]*"//g')
+
+# Extract NZ MMISID and strip label in parens
+NZMMSID=$(echo $IZRECORD | xmlstarlet sel -T  -t -m \ '/searchRetrieveResponse/records/record/recordData/record/datafield[@tag="035"]/subfield[@code="a"][contains(text(), "ALLIANCE_NETWORK")]'  -v  '.'  |  sed 's/(.*)//')
+
+# Retrieve NZ record and strip namespace
+NZRECORD=$(curl -s "$SERVER_PREFIX$NZ_CODE$QUERY$NZMMSID" | sed 's/ xmlns="[^"]*"//g')
+
+# Print IZ number, title, and number of holdings
+echo $NZRECORD | xmlstarlet sel -T  -t -m '/searchRetrieveResponse/records/record/recordData/record/datafield[@tag="245"]/subfield[@code="a"]' -o "$IZMMSID       " -v '.' -o '(' \
+	-t -c 'count(/searchRetrieveResponse/records/record/recordData/record/datafield[@tag="852"])' \
+	-o ' holdings)'
+
+
