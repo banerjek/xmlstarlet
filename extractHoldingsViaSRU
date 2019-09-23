@@ -13,16 +13,17 @@ SERVER="https://na01.alma.exlibrisgroup.com/view/sru/01ALLIANCE_NETWORK"
 VERSION="?version=1.2"
 OPERATION="&operation=searchRetrieve"
 QUERY="&query=alma.mms_id=$RECNO"
+#QUERY="&query=alma.other_system_number=$RECNO"
 MAXRECORDS="&maximumRecords=50"
 # Query below is for OCLC number in Alliance systems. OCLC number must
 # include #(OCoLC)" e.g (OCoLC)54885952
+#
 # Searches can be on any indexed field and can retrieve multiple records
 # but you'll have to page through results sets if more than 50 records,
 # the most the system will allow you to retrieve 
 #
 # To see what indexes are available, see 
 # https://na01.alma.exlibrisgroup.com/view/sru/01ALLIANCE_OHSU?version=1.2&operation=explain
-#QUERY="&query=alma.other_system_number=$RECNO"
 
 ###########################################################
 # Retrieve record and strip out namespace to simplify things
