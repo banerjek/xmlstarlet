@@ -34,9 +34,10 @@ RECORD=$(curl -s "$SERVER$VERSION$OPERATION$QUERY$MAXRECORDS" | sed 's/ xmlns="[
 # pull out 245s, 843, 852, and 856
 ###############################################################
 #
-# -t indicates template, -m indicates XPATH expression
+# -t indicates template, -m indicates XPATH expression to match
 # -n indicates to print a newline
 # -o means to print whatever text follows it
+# -c means to count whatever follows 
 # -v is value of (as in "value-of-select" in XSLT"
 #
 echo $RECORD | xmlstarlet sel -T \
