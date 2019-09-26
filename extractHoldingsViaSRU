@@ -30,7 +30,8 @@ MAXRECORDS="&maximumRecords=50"
 # for xmlstarlet
 ###########################################################
 RECORD=$(curl -s "$SERVER$VERSION$OPERATION$QUERY$MAXRECORDS" | sed 's/ xmlns="[^"]*"//g')
-#
+echo "$SERVER$VERSION$OPERATION$QUERY$MAXRECORDS"
+
 ##############################################################
 # pull out 245s, 843, 852, and 856
 ###############################################################
@@ -43,7 +44,7 @@ RECORD=$(curl -s "$SERVER$VERSION$OPERATION$QUERY$MAXRECORDS" | sed 's/ xmlns="[
 #
 echo $RECORD | xmlstarlet sel -T \
 	-t -m '/searchRetrieveResponse/records/record/recordData/record' \
-	-n -o "$RECNO 	" \
+	-n -v 'controlfield[@tag="001"]' -o " 	" \
 	-v 'datafield[@tag="245"]/subfield[@code="a"]' \
 	-o '	(' \
 	-c 'count(datafield[@tag="852"])' -o ' holdings)	' \
