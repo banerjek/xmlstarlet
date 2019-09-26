@@ -31,7 +31,7 @@ MAXRECORDS="&maximumRecords=50"
 ###########################################################
 RECORD=$(curl -s "$SERVER$VERSION$OPERATION$QUERY$MAXRECORDS" | sed 's/ xmlns="[^"]*"//g')
 #
-###############################################################
+##############################################################
 # pull out 245s, 843, 852, and 856
 ###############################################################
 #
@@ -42,17 +42,11 @@ RECORD=$(curl -s "$SERVER$VERSION$OPERATION$QUERY$MAXRECORDS" | sed 's/ xmlns="[
 # -v is value of (as in "value-of-select" in XSLT"
 #
 echo $RECORD | xmlstarlet sel -T \
-	-t -m '/searchRetrieveResponse/records/record/recordData/record/datafield[@tag="245"]/subfield[@code="a"]' \
-	-n -o "$RECNO 245	" \
-	-v '.' \
-	-t -m '/searchRetrieveResponse/records/record/recordData/record/datafield[@tag="843"]/subfield[@code="a"]' \
-	-n -o "$RECNO 843	" \
-	-v '.' \
-	-t -m '/searchRetrieveResponse/records/record/recordData/record/datafield[@tag="852"]' \
-	-n -o "$RECNO 852	" \
-	-v 'subfield[@code="a"]' -o "_" \
-	-v 'subfield[@code="6"]' -o "_" \
-	-v 'subfield[@code="9"][1]' -o "-" -v 'subfield[@code="9"][2]' \
-	-t -m '/searchRetrieveResponse/records/record/recordData/record/datafield[@tag="856"]/subfield[@code="u"]' \
-	-n -o "$RECNO 856	" \
-	-v '.'  
+	-t -m '/searchRetrieveResponse/records/record/recordData/record' \
+	-n -o "$RECNO 	" \
+	-v 'datafield[@tag="245"]/subfield[@code="a"]' \
+	-o '	(' \
+	-c 'count(datafield[@tag="852"])' -o ' holdings)	' \
+	-m 'datafield[@tag="852"]' \
+	-v 'subfield[@code="a"]' -o ';'
+	
