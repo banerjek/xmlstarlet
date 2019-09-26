@@ -1,6 +1,6 @@
-while IFS= read -r mmsid 
+for mmsid in $(cat mmsids)
+
 do
-  echo "$mmsid"
-  ./extractHoldingsViaSRU "$mmsid" >> processed_records
-  # ./extractNZHoldingsFromIZMMSIDs "$mmsid" >> processed_records
-done < "mmsids"
+./extractHoldings "$mmsid"
+done
+
